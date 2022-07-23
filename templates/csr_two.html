@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+    <div class="container">
+        <div class="jumbotron">
+           <h1>Sign CSR :</h1>
+           <form method="post" enctype="multipart/form-data">
+                <p>Do you want to upload file or paste csr:</p>
+                <input type="radio" id="upload" name="checkit" onclick="enableUpload()" value="upload">
+                <label for="upload">Upload CSR in pem file format</label><br>
+                <input type="radio" id="paste" name="checkit" onclick="enableText()" value="paste">
+                <label for="paste">Paste CSR</label><br>
+                <br> <br>
+
+                <label>Upload Csr: </label> &nbsp;
+                <input type="file" id="itsfile" name="file">
+                
+                <br> <br>
+                {{ form.as_p }}
+                {% csrf_token %}
+                <input class="btn btn-primary" type="submit" value="Sign CSR">
+            </form>
+            <br>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Show certs
+            </button>
+        </div>
+
+    </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Generated certs</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p> <b>Certificate:</b></p>
+          {{cert}}
+          <br> <br>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('itsfile').disabled = true
+    document.getElementById('id_csr').disabled = true
+    document.getElementById('id_csr').textContent = "-----BEGIN CERTIFICATE REQUEST-----\n...\n-----END CERTIFICATE REQUEST-----"
+
+    function enableText(){
+      document.getElementById('itsfile').disabled = true
+      document.getElementById('id_csr').disabled = false
+    }
+
+    function enableUpload(){
+      document.getElementById('itsfile').disabled = false
+      document.getElementById('id_csr').disabled = true
+    }
+  </script>
+
+{% endblock body_block %}
